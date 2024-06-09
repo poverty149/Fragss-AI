@@ -121,7 +121,7 @@ def main(input_dir, output_dir, video_path, step_size=1, threshold=0.7):
 
     print("Reading frames and extracting features...")
     processed_frames, frame_width, frame_height = read_frames(input_dir, step_size=step_size)
-    base_model = VGG16(weights='imagenet', include_top=False)
+    base_model = VGG16(weights='imagenet', include_top=False) # Also try ResNet models
     model = Model(inputs=base_model.input, outputs=base_model.output)
     
     features = []
