@@ -29,6 +29,13 @@ The Video Segmentation Tool is a Python-based application that allows users to s
 5. Click the "Segment Video" button to start the video segmentation process.
 6. The segmented video and audio clips will be saved in the selected output directory.
 
+## Things to work on
+1. Might need to adjust the threshold value for feature detection further.
+2. Correct glitches occurring after saving the clips.
+3. Need to implement faster processing techniques, currently the extraction step takes too much time.
+4. Collecting an action recognition dataset that would be appropriate for video games alone (For the meantime, stick to UCF101 and kinetics).
+   
+
 ## Contributing
 
 Contributions to the Video Segmentation Tool are welcome! If you find any issues or have ideas for improvements, please feel free to submit a pull request or open an issue on the [GitHub repository]
