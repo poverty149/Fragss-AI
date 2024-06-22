@@ -19,8 +19,61 @@ def preprocess_frame(frame, size):
     Resize the frame to the given size.
     """
     return cv2.resize(frame, size)
+def analyze_initial_frames(video_path, sample_size=50, frame_skip=5):
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        logging.error(f"Error opening video file: {video_path}")
+        return None
+    
+    # Read initial frames for analysis
+    good_matches_counts = []
+    ret, prev_frame = cap.read()
+    if not ret:
+        logging.error("Error reading the first frame.")
+        return None
+    
+    prev_gray = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
+    sift = cv2.SIFT_create()
+    prev_kp, prev_des = sift.detectAndCompute(prev_gray, None)
+    
+    frame_count = 0
+
+    while frame_count < sample_size:
+        frame_count += 1
+        for _ in range(frame_skip):  # Skip frames
+            ret, frame = cap.read()
+            if not ret:
+                break
+        
+        if not ret:
+            break
+        
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        kp, des = sift.detectAndCompute(gray, None)
+        
+        # Match features between frames
+        bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
+        matches = bf.match(prev_des, des)
+        
+        # Filter good matches
+        good_matches = [m for m in matches if m.distance < 50]
+        good_matches_counts.append(len(good_matches))
+        
+        prev_gray = gray
+        prev_kp, prev_des = kp, des
+
+    cap.release()
+    logging.info(f"Initial analysis complete. Analyzed {len(good_matches_counts)} frames.")
+    return good_matches_counts
+
+def calculate_dynamic_threshold(good_matches_counts, percentile=10):
+    threshold = np.percentile(good_matches_counts, percentile)
+    logging.info(f"Dynamic match threshold set to {threshold:.2f} based on the {percentile}th percentile.")
+    return threshold
 
 def process_frames(video_path, start_frame, end_frame, step_size, clip_limit=2,method='sift'):
+    if method=='sift':
+        good_matches_count=analyze_initial_frames(video_path)
     cap = cv2.VideoCapture(video_path)
     cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
 
@@ -63,7 +116,7 @@ def process_frames(video_path, start_frame, end_frame, step_size, clip_limit=2,m
         sift = cv2.SIFT_create()
         prev_kp, prev_des = None, None
         bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
-        match_threshold=500
+        match_threshold=calculate_dynamic_threshold(good_matches_count,percentile=10)
     
 
         while frame_number < end_frame:
