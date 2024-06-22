@@ -32,6 +32,7 @@ def process_frames(video_path, start_frame, end_frame, step_size, clip_limit=2):
     while frame_number < end_frame:
         ret, frame = cap.read()
         if not ret:
+            logging.error(f"Error reading frame: {frame_count}")
             break
 
         if frame_number % step_size == 0:
@@ -53,6 +54,8 @@ def process_frames(video_path, start_frame, end_frame, step_size, clip_limit=2):
         frame_number += 1
 
     cap.release()
+    logging.info(f"Shot boundary detection complete. {len(shot_boundaries)} boundaries found.")
+
     return frames, shot_boundaries
 
 def parallel_frame_processing(video_path, num_threads=4, clip_limit=4):
@@ -124,5 +127,5 @@ frames, shot_boundaries = parallel_frame_processing(video_path, clip_limit=clip_
 save_clips_using_processed_frames(frames, shot_boundaries, video_path)
 
 # frames now contain the processed frames along with their frame numbers
-print("Total frames processed:", len(frames))
-print("Shot boundaries detected:", shot_boundaries)
+logging.info(f"Total frames processed:{len(frames)}")
+loginng.info(f"Shot boundaries detected: {shot_boundaries}")
