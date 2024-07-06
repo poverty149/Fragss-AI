@@ -51,7 +51,7 @@ The custom dataset used in this project consists of videos categorized into two 
 - **Prediction Pipeline**: After training, the model can predict actions (Headshots or Grenades) from new gaming videos by extracting features and classifying them using the trained model.
 
 ### Additional Info
-Download the weights for the pretrained model from the link (C3D Sports 1M weights)[https://drive.google.com/file/d/1rlZ-xTkTMjgWKiQFUedRnHlDgQwx6yTm/view]
+Download the weights for the pretrained model from the link [C3D Sports 1M weights](https://drive.google.com/file/d/1rlZ-xTkTMjgWKiQFUedRnHlDgQwx6yTm/view)
 
 Will soon post a link for the weights obtained on our custom gaming data that contains headshots and grenades. We can modify the code later to account for other classes by collecting videos pertaining to them.
 
