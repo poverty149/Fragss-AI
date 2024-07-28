@@ -257,11 +257,12 @@ def save_clips_using_processed_frames_with_audio(frames, shot_boundaries, video_
 
 if __name__=='__main__':
 
-# Example usage
     video_path = 'new_seg.mp4'
-    step_size = 60
     min_clip_length = 2
-    st=time.time()
+    st = time.time()
     frames, shot_boundaries = parallel_frame_processing(video_path)
-    et=time.time()
-    et-st
+    et = time.time()
+    logging.info(f"Total processing time: {et - st} seconds")
+
+    # Save clips with audio
+    save_clips_using_processed_frames_with_audio(frames, shot_boundaries, video_path)
