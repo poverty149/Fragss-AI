@@ -4,4 +4,4 @@ The script automatically adds captions to the input video and adjusts the output
 
 ### Requirements
 
-Ensure ffmpeg and fast-whisper is downloaded.
+Ensure ffmpeg and faster-whisper is downloaded.
