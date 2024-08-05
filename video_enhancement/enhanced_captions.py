@@ -37,7 +37,7 @@ def transcribe(audio):
         logging.error(f"Error in transcription: {e}")
         return None, None
 
-def create_caption(segment, framesize, font="A", color='white', highlight_color='yellow',highlight_bg='red', stroke_color='black', stroke_width=1.5):
+def create_caption(segment, framesize, font="Impact", color='white', highlight_color='white',highlight_bg='red', stroke_color='black', stroke_width=2):
     word_clips = []
     xy_textclips_positions = []
 
@@ -53,7 +53,7 @@ def create_caption(segment, framesize, font="A", color='white', highlight_color=
 
     for word in segment.words:
         duration = word.end - word.start
-        word_clip = TextClip(word.word, font=font, fontsize=fontsize, color=color, stroke_color=stroke_color, stroke_width=stroke_width).set_start(segment.start).set_duration(segment.end - segment.start)
+        word_clip = TextClip(word.word.upper(), font=font, fontsize=fontsize, color=color, stroke_color=stroke_color, stroke_width=stroke_width,bg_color='transparent').set_start(segment.start).set_duration(segment.end - segment.start)
         word_width, word_height = word_clip.size
         
         if line_width + word_width <= max_line_width:
@@ -93,7 +93,7 @@ def create_caption(segment, framesize, font="A", color='white', highlight_color=
         word_clips.append(word_clip)
 
     for highlight_word in xy_textclips_positions:
-        word_clip_highlight = TextClip(highlight_word['word'], font=font, fontsize=fontsize, color=highlight_color,bg_color=highlight_bg, stroke_color=stroke_color, stroke_width=stroke_width).set_start(highlight_word['start']).set_duration(highlight_word['duration'])
+        word_clip_highlight = TextClip(highlight_word['word'].upper(), font=font, fontsize=fontsize, color=highlight_color,bg_color=highlight_bg, stroke_color=stroke_color, stroke_width=stroke_width).set_start(highlight_word['start']).set_duration(highlight_word['duration'])
         word_clip_highlight = word_clip_highlight.set_position((highlight_word['x_pos'], highlight_word['y_pos']))
         word_clips.append(word_clip_highlight)
 
@@ -120,11 +120,11 @@ def add_subtitle_to_video(input_video, segments):
                 max_height = max(max_height, y_pos + height)
 
             color_clip = ColorClip(size=(int(max_width * 1.1), int(max_height * 1.1)), color=(64, 64, 64))
-            color_clip = color_clip.set_opacity(.6)
+            color_clip = color_clip.set_opacity(0)
             color_clip = color_clip.set_start(segment.start).set_duration(segment.end - segment.start)
 
             clip_to_overlay = CompositeVideoClip([color_clip] + out_clips)
-            clip_to_overlay = clip_to_overlay.set_position("bottom")
+            clip_to_overlay = clip_to_overlay.set_position("center")
 
             all_linelevel_splits.append(clip_to_overlay)
 
