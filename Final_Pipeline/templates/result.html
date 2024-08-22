@@ -12,7 +12,7 @@
     <h1>Video Processing Results</h1>
     <h2>Generated Clips</h2>
     <ul>
-        {% for clip, score in virality_scores.items() %}
+        {% for clip, score in virality_scores %}
             <li>
                 <a href="{{ url_for('download_file', filename=clip) }}">{{ clip }}</a> - Virality Score: {{ score }}
                 <video controls="controls" width="250">

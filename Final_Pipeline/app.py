@@ -1,7 +1,8 @@
 from flask import Flask,request,redirect,render_template, send_file
 from werkzeug.utils import secure_filename
 import os
-
+from process_clips import *
+from shot_detection import *
 
 app=Flask(__name__)
 app.config['UPLOAD_FOLDER']='./uploads/'
@@ -24,11 +25,12 @@ def upload_video():
             filename=secure_filename(file.filename)
             filepath=os.path.join(app.config['UPLOAD_FOLDER'],filename)
             file.save(filepath)
-        print(filepath)
-        clip_scores,virality_scores=process_clips(filepath)
+        frames, shot_boundaries = parallel_frame_processing(filepath)
+        save_clips_using_processed_frames_with_audio(frames, shot_boundaries, filepath)
 
-        return render_template('result.html',clip_output=clip_scores, virality_scores=virality_scores)
+        virality_scores=process_clips_from_folder('./static/clips')
 
+        return render_template('result.html', virality_scores=virality_scores)
      
 
     return render_template('upload.html')

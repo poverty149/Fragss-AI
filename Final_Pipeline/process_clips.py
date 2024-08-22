@@ -5,7 +5,7 @@ import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.models import load_model
 from panns_inference import AudioTagging
-from models import Cnn14
+from panns_inference.models import Cnn14
 from audio_tagging import *
 from video_classification import *
 from audio_classification import *
