@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/result.css') }}">
+
+</head>
+
+<body>
+    <h1>Video Processing Results</h1>
+    <h2>Generated Clips</h2>
+    <ul>
+        {% for clip, score in virality_scores.items() %}
+            <li>
+                <a href="{{ url_for('download_file', filename=clip) }}">{{ clip }}</a> - Virality Score: {{ score }}
+                <video controls="controls" width="250">
+       
+                    <source src="{{url_for('static', filename='clips/'+clip)}}" type="video/mp4">
+                       
+                </video>
+            </li>
+        {% endfor %}
+    </ul>
+    <!-- <video controls="controls" width="250">
+       
+        <source src="{{url_for('static', filename='final_clip_13.mp4')}}" type="video/mp4">
+           
+    </video> -->
+    <!-- <h2>Video with Subtitles</h2>
+    <video width="600" controls>
+        <source src="{{ url_for('download_file', filename=video_with_subtitles) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video> -->
+</body>
+</html>

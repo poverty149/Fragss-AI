@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Document</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/upload.css') }}">
+
+</head>
+<body>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label for="file">Video file</label>
+        <input type="file" id="file" value="file" name="file" required>
+        <br>
+        <label for="subtitles" >Subtitles required</label>
+        <input type="checkbox" id="subtitles" value="subtitles">
+        <br>
+        <input type="submit" value="upload">
+    </form>
+</body>
+</html>
