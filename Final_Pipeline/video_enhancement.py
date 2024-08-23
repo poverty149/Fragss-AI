@@ -10,6 +10,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def extract_audio(input_video):
     try:
+        input_video_name=input_video.split('/')[-1].replace('.mp4','')
         extracted_audio = f"audio-{input_video_name}.wav"
         stream = ffmpeg.input(input_video)
         stream = ffmpeg.output(stream, extracted_audio)
@@ -97,8 +98,12 @@ def create_caption(segment, framesize, font="Impact", color='white', highlight_c
     return word_clips, xy_textclips_positions
 
 def add_subtitle_to_video(input_video, segments,results_dir="clips4/results"):
+    if not os.path.isdir(results_dir):
+        os.makedirs(results_dir)
+
     try:
         video = VideoFileClip(input_video)
+        input_video_name=input_video.split('/')[-1]
         frame_size = video.size
 
         all_linelevel_splits = []
@@ -129,7 +134,7 @@ def add_subtitle_to_video(input_video, segments,results_dir="clips4/results"):
 
         final_video = final_video.set_audio(video.audio)
 
-        output_video = f"{clips_dir}/output-{input_video_name}.mp4"
+        output_video = f"{results_dir}/{input_video_name}"
         final_video.write_videofile(output_video, fps=24, codec="libx264", audio_codec="aac")
         logging.info(f"Output video created: {output_video}")
     except Exception as e:
@@ -154,22 +159,22 @@ def enhance_video_with_aspect_ratio(input_video, output_video, width=None, heigh
         logging.error(f"Error enhancing video: {e}")
         return None
 
-background_music=False
-for clip,_ in top_clips:
-    input_video = f"{clips_dir}/{clip}"
-    input_video_name = os.path.splitext(clip)[0]
-    print(input_video_name)
+# background_music=False 
+# for clip,_ in top_clips:
+#     input_video = f"{clips_dir}/{clip}"
+#     input_video_name = os.path.splitext(clip)[0]
+#     print(input_video_name)
     
-    extracted_audio = extract_audio(input_video)
-    if extracted_audio:
-        language, segments = transcribe(extracted_audio)
-        if language and segments:
-            enhanced_video = enhance_video_with_aspect_ratio(input_video, f"{clips_dir}/enhanced-{input_video_name}.mp4", width=1280)
-            if enhanced_video:
-                add_subtitle_to_video(enhanced_video, segments,clips_dir)
-    if background_music:
-        my_clip = VideoFileClip(f"{clips_dir}/output-{input_video_name}.mp4")
-        audio_background = AudioFileClip('some_background.mp3')
-        final_audio = CompositeAudioClip([my_clip.audio, audio_background])
-        final_clip = my_clip.set_audio(final_audio)
+#     extracted_audio = extract_audio(input_video)
+#     if extracted_audio:
+#         language, segments = transcribe(extracted_audio)
+#         if language and segments:
+#             enhanced_video = enhance_video_with_aspect_ratio(input_video, f"{clips_dir}/enhanced-{input_video_name}.mp4", width=1280)
+#             if enhanced_video:
+#                 add_subtitle_to_video(enhanced_video, segments,clips_dir)
+#     if background_music:
+#         my_clip = VideoFileClip(f"{clips_dir}/output-{input_video_name}.mp4")
+#         audio_background = AudioFileClip('some_background.mp3')
+#         final_audio = CompositeAudioClip([my_clip.audio, audio_background])
+#         final_clip = my_clip.set_audio(final_audio)
         
